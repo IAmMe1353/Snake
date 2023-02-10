@@ -18,6 +18,8 @@ public class RpgGui {
 	
 	public RpgGui() {
 		
+		//test
+		
 		// constructing variables
 		frame = new JFrame();
 		panel = new JPanel(new GridBagLayout());
