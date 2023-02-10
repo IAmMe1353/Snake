@@ -11,24 +11,26 @@ public class RpgGui {
 	private JPanel panel;
 	private JPanel field;
 	private JTextField topText;
-	private JTextField enemy1Name;
 	private GridBagConstraints textBag;
 	private GridBagConstraints fieldBag;
+	private GridBagConstraints enemyBag;
+	private Enemy enemy1;
 	
 	
 	public RpgGui() {
 		
-		//test
-		
 		// constructing variables
 		frame = new JFrame();
 		panel = new JPanel(new GridBagLayout());
-		field = new JPanel(new GridBagLayout());
+		
 		topText = new JTextField("Lorem Ipsum");
-		enemy1Name = new JTextField("test");
+		
+		field = new JPanel(new GridBagLayout());
+		
 		textBag = new GridBagConstraints();
 		fieldBag = new GridBagConstraints();
-		
+		enemyBag = new GridBagConstraints();
+		 
 		
 		// config topText gridbagconstraints
 		// fills horizontal axis when needed
@@ -36,13 +38,17 @@ public class RpgGui {
 		// position x = 0
 		textBag.gridy = 0;
 		
-		enemy1Name.setEditable(false);
+		// config enemy1
+		enemy1 = new Enemy("test",10,10,10,10);
+		
+		
+		field.add(enemy1.getPanel(),enemy1.getBag());
+		// setting position of field
 		fieldBag.gridy = 1;
-		field.add(enemy1Name,textBag);
 		
-		
+		textBag.gridy = 0;
 		// setting panel border
-		panel.setBorder(BorderFactory.createEmptyBorder());
+		panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 		// adding components
 		panel.add(topText,textBag);
 		panel.add(field,fieldBag);
