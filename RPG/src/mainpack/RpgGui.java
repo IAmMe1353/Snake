@@ -146,6 +146,7 @@ public class RpgGui implements ActionListener {
 		if (e.getSource() == movesButton)
 		{
 			 menuText.setText("hello\ngoodbye\nGonzaga");
+			 // TODO add keylistener
 		}
 		if (e.getSource() == bagButton)
 		{
