@@ -1,11 +1,16 @@
 package mainpack;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
-public class RpgGui {
+public class RpgGui implements ActionListener {
 	
 	// Declare variables
 	private JFrame frame;
@@ -20,6 +25,7 @@ public class RpgGui {
 	private GridBagConstraints menuSubBag;
 	private JTextField topText;
 	private JTextArea menuText;
+	private JScrollPane scrollPane;
 	private JButton movesButton;
 	private JButton bagButton;
 	private JButton setButton;
@@ -29,7 +35,7 @@ public class RpgGui {
 	private Enemy monster1;
 	
 	
-	public RpgGui() {
+	public RpgGui(){
 		
 		// constructing variables
 		frame = new JFrame();
@@ -47,12 +53,14 @@ public class RpgGui {
 		movesButton = new JButton("Moves");
 		bagButton = new JButton("Bag");
 		setButton = new JButton("settings");
+		scrollPane = new JScrollPane(menuText);
 		
 		// config topText gridbagconstraints
 		textBag.fill = GridBagConstraints.HORIZONTAL;
 		textBag.gridy = 0;
 		textBag.gridwidth = 3;
 		topText.setHorizontalAlignment(JTextField.CENTER);
+		topText.setEditable(false);
 
 		// config fieldBag gridbagconstraints
 		fieldBag.gridy = 1;
@@ -66,8 +74,12 @@ public class RpgGui {
 		menuBag.gridx = 1;
 		menuBag.gridheight = 4;
 		menuBag.gridy = 1;
-		menuBag.weighty = 1;
 		menuBag.fill = GridBagConstraints.BOTH;
+		
+		// config buttons
+		movesButton.addActionListener(this);
+		bagButton.addActionListener(this);
+		setButton.addActionListener(this);
 		
 		// config menu
 		menuSubBag.gridx = 0;
@@ -80,9 +92,11 @@ public class RpgGui {
 		menuSubBag.gridx = 0;
 		menuSubBag.gridy = 1;
 		menuSubBag.gridwidth = 3;
-		menuSubBag.ipady = 40;
+		menuSubBag.gridheight = 4;
+		menuSubBag.ipady = 36;
 		menuSubBag.fill = GridBagConstraints.BOTH;
-		menu.add(menuText,menuSubBag);
+		menuText.setEditable(false);
+		menu.add(scrollPane,menuSubBag);
 		
 		
 		// config enemies
@@ -97,7 +111,7 @@ public class RpgGui {
 		
 		
 		// config panel
-		panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		panel.setBorder(BorderFactory.createEmptyBorder());
 		panel.add(topText,textBag);
 		panel.add(field,fieldBag);
 		panel.add(field2,fieldBag2);
@@ -112,11 +126,36 @@ public class RpgGui {
 
 
 	}
-	
+	private void highLightText(int line) throws BadLocationException
+	{
+		int startIndex = menuText.getLineStartOffset(line);
+		int endIndex = menuText.getLineEndOffset(line);
+		DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.yellow);
+		menuText.getHighlighter().addHighlight(startIndex, endIndex, painter);
+		
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new RpgGui();
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == movesButton)
+		{
+			 menuText.setText("hello\ngoodbye\nGonzaga");
+		}
+		if (e.getSource() == bagButton)
+		{
+			menuText.setText("goodbye\nhello");
+		}
+		if (e.getSource() == setButton)
+		{
+			menuText.setText("ahhhh\nahhh");
+		}
+		
 	}
 
 }
