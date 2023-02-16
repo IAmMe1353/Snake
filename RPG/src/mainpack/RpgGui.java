@@ -81,6 +81,7 @@ public class RpgGui implements ActionListener {
 		bagButton.addActionListener(this);
 		setButton.addActionListener(this);
 		
+		addKeyListener(this);
 		// config menu
 		menuSubBag.gridx = 0;
 		menuSubBag.gridy = 0;
@@ -146,7 +147,7 @@ public class RpgGui implements ActionListener {
 		if (e.getSource() == movesButton)
 		{
 			 menuText.setText("hello\ngoodbye\nGonzaga");
-			 // TODO add keylistener
+			 // TODO add keylistener https://stackoverflow.com/questions/21997130/how-to-use-keylistener-with-jframe
 		}
 		if (e.getSource() == bagButton)
 		{
