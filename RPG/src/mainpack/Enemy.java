@@ -1,24 +1,26 @@
 package mainpack;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
-public class Enemy {
+public class Enemy{
 	
 	private String name;
 	private int hp;
 	private int spd;
 	private int at;
 	private int df;
-	private GridBagConstraints gridBag;
 	private JTextField healthBox;
 	private JTextField nameBox;
 	private JTextField attackBox;
 	private JPanel panel;
-	private static int numEnemies = 0;
+	public static int numEnemies = 0;
+	public ArrayList<Moves> moveSet;
 	
-	public Enemy(String name, int health, int speed, int attack, int defense)
+	
+	public Enemy(String name, int health, int speed, int attack, int defense, int type)
 	{
 
 		this.name = name;
@@ -27,11 +29,21 @@ public class Enemy {
 		at = attack;
 		df = defense;
 		numEnemies += 1;
-		System.out.println(numEnemies);
+		if (type == 0)
+		{
+			moveSet = new ArrayList<Moves>();
+			moveSet.addAll(Moves.getBasicMoves());
+		}
+		else if (type == 1)
+		{
+			moveSet = new ArrayList<Moves>();
+			moveSet.addAll(Moves.getIceMoves());
+		}
 		setPanel();
 	}
 	
 	private void setPanel() {
+		GridBagConstraints gridBag;
 		panel = new JPanel(new GridBagLayout());
 		nameBox = new JTextField(name);
 		nameBox.setEditable(false);
@@ -42,7 +54,7 @@ public class Enemy {
 		attackBox = new JTextField(" at: " + at);
 		attackBox.setEditable(false);
 		attackBox.setHorizontalAlignment(JTextField.CENTER);
-		GridBagConstraints gridBag = new GridBagConstraints();
+		gridBag = new GridBagConstraints();
 		
 		gridBag.fill = GridBagConstraints.HORIZONTAL;
 		gridBag.gridy = 0;
@@ -60,6 +72,16 @@ public class Enemy {
 	{
 		return panel;
 	}
+	
+	public String getMovesString() {
+		String output = "";
+		for (int i = 0; i < moveSet.size(); i++)
+		{
+			output += moveSet.get(i) + "\n";
+		}
+		return output;
+	}
+	
 	public GridBagConstraints getBag(int x) {
 		GridBagConstraints product = new GridBagConstraints();
 		product.gridx = x;

@@ -3,14 +3,15 @@ package mainpack;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.concurrent.TimeUnit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
-public class RpgGui implements ActionListener {
+public class RpgGui implements ActionListener, KeyListener {
 	
 	// Declare variables
 	private JFrame frame;
@@ -29,6 +30,9 @@ public class RpgGui implements ActionListener {
 	private JButton movesButton;
 	private JButton bagButton;
 	private JButton setButton;
+	private int onLine;
+	private int turn;
+	private ArrayList<Enemy> hand;
 
 	private Enemy enemy1;
 	private Enemy enemy2;
@@ -54,6 +58,9 @@ public class RpgGui implements ActionListener {
 		bagButton = new JButton("Bag");
 		setButton = new JButton("settings");
 		scrollPane = new JScrollPane(menuText);
+		hand = new ArrayList<Enemy>();
+		onLine = 0;
+		turn = 0;
 		
 		// config topText gridbagconstraints
 		textBag.fill = GridBagConstraints.HORIZONTAL;
@@ -80,11 +87,18 @@ public class RpgGui implements ActionListener {
 		movesButton.addActionListener(this);
 		bagButton.addActionListener(this);
 		setButton.addActionListener(this);
+		movesButton.addKeyListener(this);
+        movesButton.setFocusable(true);
+		bagButton.addKeyListener(this);
+        bagButton.setFocusable(true);
+		setButton.addKeyListener(this);
+        setButton.setFocusable(true);
 		
 		// config menu
 		menuSubBag.gridx = 0;
 		menuSubBag.gridy = 0;
 		menu.add(movesButton,menuSubBag);
+		menuText.setEditable(false);
 		menuSubBag.gridx = 1;
 		menu.add(bagButton,menuSubBag);
 		menuSubBag.gridx = 2;
@@ -95,19 +109,22 @@ public class RpgGui implements ActionListener {
 		menuSubBag.gridheight = 4;
 		menuSubBag.ipady = 36;
 		menuSubBag.fill = GridBagConstraints.BOTH;
-		menuText.setEditable(false);
 		menu.add(scrollPane,menuSubBag);
 		
 		
-		// config enemies
-		enemy1 = new Enemy("test", 10, 10, 10, 10);
+		// config field1
+		enemy1 = new Enemy("test", 10, 10, 10, 10, 0);
 		field.add(enemy1.getPanel(),enemy1.getBag(0));
-		enemy2 = new Enemy("test 2", 10, 10, 10, 10);
+		enemy2 = new Enemy("test 2", 10, 10, 10, 10, 0);
 		field.add(enemy2.getPanel(),enemy2.getBag(1));
 		
 		// config field2
-		monster1 = new Enemy("mine",10,10,10,10);
+		Enemy.numEnemies = 0;
+		monster1 = new Enemy("Ice",10,10,10,10, 1);
 		field2.add(monster1.getPanel(),monster1.getBag(0));
+		hand.add(monster1);
+		
+		menuText.setText(monster1.getMovesString());
 		
 		
 		// config panel
@@ -117,26 +134,49 @@ public class RpgGui implements ActionListener {
 		panel.add(field2,fieldBag2);
 		panel.add(menu,menuBag);
 		
+		
 		// config frame
 		frame.add(panel);
+		frame.addKeyListener(this);
+        frame.setFocusable(true);
+        frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("RPG");
 		frame.pack();
 		frame.setVisible(true);
+		
+		highLightText(0);
 
 
 	}
-	private void highLightText(int line) throws BadLocationException
+	private void highLightText(int distance)
 	{
-		int startIndex = menuText.getLineStartOffset(line);
-		int endIndex = menuText.getLineEndOffset(line);
 		DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.yellow);
-		menuText.getHighlighter().addHighlight(startIndex, endIndex, painter);
+		int startIndex;
+		int endIndex;
+		onLine += distance;
+		if (onLine == -1)
+			onLine = hand.get(turn).moveSet.size() -1;
+		else if (onLine == hand.get(turn).moveSet.size())
+			onLine = 0;
+			
+		// erase
+		menuText.getHighlighter().removeAllHighlights();
+		// highlight
+		try {
+			startIndex = menuText.getLineStartOffset(onLine);
+			endIndex = menuText.getLineEndOffset(onLine);
+			menuText.getHighlighter().addHighlight(startIndex, endIndex, painter);
+		}
+		catch (BadLocationException e){
+			System.out.println("Something broke");
+			System.out.println(onLine);
+			onLine -= 1;
+		}
 		
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new RpgGui();
 	}
 
@@ -145,8 +185,8 @@ public class RpgGui implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == movesButton)
 		{
-			 menuText.setText("hello\ngoodbye\nGonzaga");
-			 // TODO add keylistener
+			 menuText.setText(hand.get(turn).getMovesString());
+			 highLightText(0);
 		}
 		if (e.getSource() == bagButton)
 		{
@@ -157,6 +197,21 @@ public class RpgGui implements ActionListener {
 			menuText.setText("ahhhh\nahhh");
 		}
 		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			highLightText(1);
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_UP){
+			highLightText(-1);
+		}
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 
 }
