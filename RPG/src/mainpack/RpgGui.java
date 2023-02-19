@@ -31,8 +31,10 @@ public class RpgGui implements ActionListener, KeyListener {
 	private JButton bagButton;
 	private JButton setButton;
 	private int onLine;
+	private int onEnemy;
 	private int turn;
 	private ArrayList<Enemy> hand;
+	private ArrayList<Enemy> enemyHand;
 
 	private Enemy enemy1;
 	private Enemy enemy2;
@@ -59,7 +61,9 @@ public class RpgGui implements ActionListener, KeyListener {
 		setButton = new JButton("settings");
 		scrollPane = new JScrollPane(menuText);
 		hand = new ArrayList<Enemy>();
+		enemyHand = new ArrayList<Enemy>();
 		onLine = 0;
+		onEnemy = 0;
 		turn = 0;
 		
 		// config topText gridbagconstraints
@@ -115,7 +119,9 @@ public class RpgGui implements ActionListener, KeyListener {
 		// config field1
 		enemy1 = new Enemy("test", 10, 10, 10, 10, 0);
 		field.add(enemy1.getPanel(),enemy1.getBag(0));
+		enemyHand.add(enemy1);
 		enemy2 = new Enemy("test 2", 10, 10, 10, 10, 0);
+		enemyHand.add(enemy2);
 		field.add(enemy2.getPanel(),enemy2.getBag(1));
 		
 		// config field2
@@ -146,8 +152,28 @@ public class RpgGui implements ActionListener, KeyListener {
 		frame.setVisible(true);
 		
 		highLightText(0);
+		fight();
 
 
+	}
+	
+	private void fight()
+	{
+		while (enemyHand.size() > 0 && hand.size() > 0)
+		{
+			// main game loop
+			for (int i = 0; i < hand.size(); i++)
+			{
+				// each monster
+				onEnemy = 0;
+				highLightEnemy(0);
+				
+				while(true);
+				// TODO make fight loop
+				
+			}
+			
+		}
 	}
 	private void highLightText(int distance)
 	{
@@ -171,8 +197,34 @@ public class RpgGui implements ActionListener, KeyListener {
 		catch (BadLocationException e){
 			System.out.println("Something broke");
 			System.out.println(onLine);
-			onLine -= 1;
 		}
+		
+	}
+	private void highLightEnemy(int distance)
+	{
+		DefaultHighlightPainter painter = new DefaultHighlightPainter(Color.yellow);
+		int endIndex;
+		
+		enemyHand.get(onEnemy).getName().getHighlighter().removeAllHighlights();
+
+		onEnemy += distance;
+		if (onEnemy == -1)
+			onEnemy = enemyHand.size() - 1;
+		else if (onEnemy == enemyHand.size())
+			onEnemy = 0;
+		
+		try {
+			endIndex = enemyHand.get(onEnemy).getName().getText().length();
+			enemyHand.get(onEnemy).getName().getHighlighter().addHighlight(0, endIndex, painter);
+		}
+		catch (BadLocationException e){
+			System.out.println("Something broke");
+			System.out.println(onLine);
+		}
+		
+		
+		
+			
 		
 	}
 	
@@ -186,6 +238,7 @@ public class RpgGui implements ActionListener, KeyListener {
 		if (e.getSource() == movesButton)
 		{
 			 menuText.setText(hand.get(turn).getMovesString());
+			 onLine = 0;
 			 highLightText(0);
 		}
 		if (e.getSource() == bagButton)
@@ -208,6 +261,14 @@ public class RpgGui implements ActionListener, KeyListener {
 		}
 		else if (e.getKeyCode() == KeyEvent.VK_UP){
 			highLightText(-1);
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_LEFT)
+		{
+			highLightEnemy(-1);
+		}
+		else if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+		{
+			highLightEnemy(1);
 		}
 	}
 	@Override

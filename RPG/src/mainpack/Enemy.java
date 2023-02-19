@@ -72,6 +72,10 @@ public class Enemy{
 	{
 		return panel;
 	}
+	public JTextField getName()
+	{
+		return nameBox;
+	}
 	
 	public String getMovesString() {
 		String output = "";
