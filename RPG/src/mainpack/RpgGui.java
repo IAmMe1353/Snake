@@ -15,24 +15,14 @@ public class RpgGui implements ActionListener, KeyListener {
 	
 	// Declare variables
 	private JFrame frame;
-	private JPanel panel;
-	private JPanel field;
-	private JPanel field2;
-	private JPanel menu;
-	private GridBagConstraints textBag;
-	private GridBagConstraints fieldBag;
-	private GridBagConstraints fieldBag2;
-	private GridBagConstraints menuBag;
-	private GridBagConstraints menuSubBag;
+	private JPanel panel, field, field2, menu;
+	private GridBagConstraints textBag, fieldBag, fieldBag2, menuBag, menuSubBag;
 	private JTextField topText;
 	private JTextArea menuText;
 	private JScrollPane scrollPane;
-	private JButton movesButton;
-	private JButton bagButton;
-	private JButton setButton;
-	private int onLine;
-	private int onEnemy;
-	private int turn;
+	private JButton movesButton, bagButton, setButton;
+
+	private int onLine, onEnemy, turn;
 	private boolean moveSelected;
 	private ArrayList<Enemy> hand;
 	private ArrayList<Enemy> enemyHand;
